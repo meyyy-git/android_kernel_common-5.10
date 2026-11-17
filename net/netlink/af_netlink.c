@@ -470,14 +470,14 @@ static inline int netlink_compare(struct rhashtable_compare_arg *arg,
 	const struct netlink_sock *nlk = ptr;
 
 	return nlk->portid != x->portid ||
-	       sock_net(&nlk->sk)->net_cookie != x->net_cookie;
+	       atomic64_read(&sock_net(&nlk->sk)->net_cookie) != x->net_cookie;
 }
 
 static void netlink_compare_arg_init(struct netlink_compare_arg *arg,
 				     struct net *net, u32 portid)
 {
 	memset(arg, 0, sizeof(*arg));
-	arg->net_cookie = net->net_cookie;
+	arg->net_cookie = atomic64_read(&net->net_cookie);
 	arg->portid = portid;
 }
 

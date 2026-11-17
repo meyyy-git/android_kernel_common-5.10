@@ -8,7 +8,10 @@
 struct unicode_map {
 	const char *charset;
 	int version;
+#ifndef __GENKSYMS__
+	/* KABI: hanya dialokasikan/dibaca kernel; modul cuma memegang pointer */
 	struct rcu_head rcu;
+#endif
 };
 
 int utf8_validate(const struct unicode_map *um, const struct qstr *str);
